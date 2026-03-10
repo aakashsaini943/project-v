@@ -34,7 +34,7 @@ const Loginpage = () => {
       email: true,
     })
     .extend({
-      password: z.string().min("3", "password field is required"),
+      password: z.string().min(3, "Password must be at least 3 characters")
     });
 
   const form = useForm({
@@ -45,7 +45,9 @@ const Loginpage = () => {
     },
   });
 
-  const handleLoginSubmit = async (value) => {};
+  const handleLoginSubmit = async (value) => {
+    console.log(value)
+  };
 
   return (
     <Card className="w-[450]">

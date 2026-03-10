@@ -1,59 +1,61 @@
-import { Phone } from "lucide-react";
-import mongoose, { mongo } from "mongoose";
-import { unique } from "next/dist/build/utils";
-import { Avatar } from "radix-ui";
-import { boolean, date, email, string, trim, url } from "zod";
-import { required } from "zod/v4/core/util.cjs";
+// import { Phone } from "lucide-react";
+// import mongoose, { mongo } from "mongoose";
+// import { unique } from "next/dist/build/utils";
+// import { Avatar } from "radix-ui";
+// import { boolean, date, email, string, trim, url } from "zod";
+// import { required } from "zod/v4/core/util.cjs";
 import bcrypt from 'bcryptjs'
+import mongoose from "mongoose";
+
 
 const userSchema = new mongoose.Schema({
   role:{
-    type: string,
+    type: String,
     required: true,
     enum: ['user', 'admin'],
     default: 'user'
   },
   name: {
-    type: string,
+    type: String,
     required: true,
     trim: true
   },
    email: {
-    type: string,
+    type: String,
     required: true,
     trim: true,
     unique: true,
   },
     password: {
-    type: string,
+    type: String,
     required: true,
     trim: true,
     select: false,
   },
   avatar: {
     url: {
-      type: string,
+      type: String,
       trim: true
     },
     public_id: {
-      type: string,
+      type: String,
       trim: true,
     },
   },
   isEmailVerified: {
-    type: boolean,
+    type: Boolean,
     default: false,
   },
   Phone: {
-    type: string,
+    type: String,
     trim: true,
   },
   address: {
-    type: string,
+    type: String,
     trim: true,
   },
   deleteAt: {
-    type: date,
+    type: Date,
     default: null,
     index: true,
   },
