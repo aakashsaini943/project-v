@@ -25,9 +25,9 @@ import ButtonLoading from "@/components/Application/ButtonLoading";
 import { z } from "zod";
 
 import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
+import { showToast } from "@/lib/showToast";
 
 const RegisterPage = () => {
-
   const [loading, setLoading] = useState(false);
 
   const formSchema = zSchema
@@ -50,17 +50,17 @@ const RegisterPage = () => {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const handleRegisterSubmit = async (values) => {
     try {
-
       setLoading(true);
 
       const { data: registerResponse } = await axios.post(
         "/api/auth/register",
-        values
+        values,
       );
 
       if (!registerResponse.success) {
@@ -68,24 +68,17 @@ const RegisterPage = () => {
       }
 
       form.reset();
-      alert(registerResponse.message);
-
+      showToast("success", registerResponse.message);
     } catch (error) {
-
-      alert(error.message);
-
+      showToast("error", registerResponse.message);
     } finally {
-
       setLoading(false);
-
     }
   };
 
   return (
     <Card className="w-[450px]">
-
       <CardContent>
-
         {/* Logo */}
 
         <div className="flex justify-center mb-5">
@@ -106,14 +99,11 @@ const RegisterPage = () => {
         </div>
 
         <div className="mt-5">
-
           <Form {...form}>
-
             <form
               onSubmit={form.handleSubmit(handleRegisterSubmit)}
               className="space-y-4"
             >
-
               {/* Name */}
 
               <FormField
@@ -121,7 +111,6 @@ const RegisterPage = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-
                     <FormLabel>Full Name</FormLabel>
 
                     <FormControl>
@@ -133,7 +122,6 @@ const RegisterPage = () => {
                     </FormControl>
 
                     <FormMessage />
-
                   </FormItem>
                 )}
               />
@@ -145,7 +133,6 @@ const RegisterPage = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-
                     <FormLabel>Email</FormLabel>
 
                     <FormControl>
@@ -157,7 +144,6 @@ const RegisterPage = () => {
                     </FormControl>
 
                     <FormMessage />
-
                   </FormItem>
                 )}
               />
@@ -169,7 +155,6 @@ const RegisterPage = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-
                     <FormLabel>Password</FormLabel>
 
                     <FormControl>
@@ -181,7 +166,6 @@ const RegisterPage = () => {
                     </FormControl>
 
                     <FormMessage />
-
                   </FormItem>
                 )}
               />
@@ -193,7 +177,6 @@ const RegisterPage = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-
                     <FormLabel>Confirm Password</FormLabel>
 
                     <FormControl>
@@ -205,7 +188,6 @@ const RegisterPage = () => {
                     </FormControl>
 
                     <FormMessage />
-
                   </FormItem>
                 )}
               />
@@ -222,26 +204,16 @@ const RegisterPage = () => {
               {/* Login */}
 
               <div className="text-center flex justify-center items-center gap-2">
-
                 <p>Already have account?</p>
 
-                <Link
-                  href={WEBSITE_LOGIN}
-                  className="text-primary underline"
-                >
+                <Link href={WEBSITE_LOGIN} className="text-primary underline">
                   Login
                 </Link>
-
               </div>
-
             </form>
-
           </Form>
-
         </div>
-
       </CardContent>
-
     </Card>
   );
 };

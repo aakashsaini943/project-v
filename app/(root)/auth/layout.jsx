@@ -1,6 +1,6 @@
 import React from "react";
 
-const Layout = ({ children }) => {
+const layout = ({ children }) => {
   return (
     <div className="h-screen w-screen flex justify-center items-center">
       {children}
@@ -8,4 +8,4 @@ const Layout = ({ children }) => {
   );
 };
 
-export default Layout;
+export default layout;

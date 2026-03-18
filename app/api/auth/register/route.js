@@ -8,8 +8,9 @@ import { SignJWT } from "jose";
 
 export async function POST(request) {
   try {
+
     await connectDB();
-    // validation schema
+
     const validationSchema = zSchema.pick({
       name: true,
       email: true,
@@ -24,19 +25,18 @@ export async function POST(request) {
       return response(
         false,
         401,
-        "invalid or missin input filed.",
-        validatedData.error,
+        "invalid or missing input field.",
+        validatedData.error
       );
     }
 
     const { name, email, password } = validatedData.data;
-    //  check already registered user
-    const checkUser = await UserModel.exists({ email });
-    if (checkUser) {
-      return response(true, 409, "User already registered.");
-    }
 
-    // new regestration
+    const checkUser = await UserModel.exists({ email });
+
+    if (checkUser) {
+      return response(false, 409, "User already registered.");
+    }
 
     const NewRegistration = new UserModel({
       name,
@@ -47,22 +47,28 @@ export async function POST(request) {
     await NewRegistration.save();
 
     const secret = new TextEncoder().encode(process.env.SECRET_KEY);
-    const token = await new SignJWT({ userId: NewRegistration._id })
+
+    const token = await new SignJWT({ userId: NewRegistration._id.toString() })
+      .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("1h")
-      .setProtectedHeader()({ alg: "HS256" })
       .sign(secret);
 
     await sendMail(
-      ` Email verification request from XYZ Technologies`,
+      "Email verification request from XYZ Technologies",
       email,
-      emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/verify-email/${token}`));
+      emailVerificationLink(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`
+      )
+    );
 
-      return response(true, 200, 'Regestration Success please verify your email address.')
-
-
+    return response(
+      true,
+      200,
+      "Registration Success. Please verify your email address."
+    );
 
   } catch (error) {
-    catchError(error)
+    return catchError(error);
   }
 }
